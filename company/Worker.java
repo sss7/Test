@@ -12,7 +12,6 @@ abstract public class Worker {
     public String getName() {
         return name;
     }
-
     public String getPost() {
         return post;
     }
@@ -20,7 +19,6 @@ abstract public class Worker {
     public void setName(String name) {
         this.name = name;
     }
-
     public void setPost(String post) {
         this.post = post;
     }
