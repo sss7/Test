@@ -1,6 +1,5 @@
 package test;
-//sss
-// dym91@list.ru
+//sss// dym91@list.ru
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
