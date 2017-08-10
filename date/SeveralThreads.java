@@ -14,12 +14,16 @@ public class SeveralThreads implements Runnable {
     static String fileOut = "C:\\Users\\psushenko\\Desktop\\fileOut.txt";
     static BufferedReader reader;
     static List<Date> dateList = new ArrayList<>();
-    static DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss\r\n");
+    static DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss\r\n");
 
     public static void main(String[] args) {
+        int n = Integer.parseInt(args[0]); //2// количество потоков
+
         SeveralThreads runner = new SeveralThreads();
-        Thread thread1 = new Thread(runner);
-        Thread thread2 = new Thread(runner);
+        Thread[] threads = new Thread[n];
+        for (int i = 0; i < n; i++) {
+            threads[i] = new Thread(runner);
+        }
 
         try {
             reader = new BufferedReader(new FileReader(new File(path)));
@@ -27,24 +31,30 @@ public class SeveralThreads implements Runnable {
             e.printStackTrace();
         }
 
-        thread1.start();
-        thread2.start();
+        Date date1 = new Date(); /////////////////////////////////
+
+        for (int i = 0; i < n; i++) {
+            threads[i].start();
+        }
 
         try {
-            thread1.join();
-            thread2.join();
+            for (int i = 0; i < n; i++) {
+                threads[i].join();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        System.out.println();
+        Date date2 = new Date(); /////////////////////////////////
+
+
         Collections.sort(dateList);
 
 
         try {
             OutputStream outputStream = new FileOutputStream(fileOut);
             for (Date date : dateList) {
-                System.out.print(dateFormat.format(date));
+//                System.out.print(dateFormat.format(date));
                 outputStream.write(dateFormat.format(date).getBytes());
             }
 
@@ -54,18 +64,21 @@ public class SeveralThreads implements Runnable {
             e.printStackTrace();
         }
 
+        System.out.println((date2.getTime()-date1.getTime())/1000);
+        System.out.println(date2.getTime() - date1.getTime());
+
     }
 
 
     public void run () {
         try {
-            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss"); //WHY!?
+            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss"); //WHY!?
             Date parsingDate;
 
             String line;
             while ((line = reader.readLine()) != null) {
                 parsingDate = dateFormat.parse(line);
-                System.out.println(dateFormat.format(parsingDate) + " " + Thread.currentThread().getName());
+//                System.out.println(dateFormat.format(parsingDate) + " " + Thread.currentThread().getName());
 //                Date date = new Date(parsingDate.getTime());
 //                dateList.add(new Date(parsingDate.getTime()));
                 recordList(new Date(parsingDate.getTime()));

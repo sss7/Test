@@ -9,7 +9,7 @@ public class DateGenerator {
 
     public static void main(String[] args) {
         Random random = new Random();
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss\r\n");
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss\r\n");
 //        String path = "C:\\Users\\psushenko\\Desktop\\date.txt";
 
         try {
@@ -17,7 +17,7 @@ public class DateGenerator {
 
             long number = -1;
             long number2 = -1;
-            for (int i = 0; i < 30; i++) { //250000
+            for (int i = 0; i < 250000; i++) { //250000
                 while (number < 0 || number == number2) {
                     number = new Date(random.nextLong()).getTime() % new Date().getTime();
                 }
