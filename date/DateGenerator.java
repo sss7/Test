@@ -6,6 +6,7 @@ import java.text.*;
 
 public class DateGenerator {
     static String path = "C:\\Users\\psushenko\\Desktop\\date.txt";
+    static int count = 250000; //250000; //количество строк
 
     public static void main(String[] args) {
         Random random = new Random();
@@ -17,7 +18,7 @@ public class DateGenerator {
 
             long number = -1;
             long number2 = -1;
-            for (int i = 0; i < 250000; i++) { //250000
+            for (int i = 0; i < count; i++) { //250000
                 while (number < 0 || number == number2) {
                     number = new Date(random.nextLong()).getTime() % new Date().getTime();
                 }
