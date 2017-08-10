@@ -6,27 +6,50 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class SeveralThreads {
+public class SeveralThreads implements Runnable {
+    static String path = "C:\\Users\\psushenko\\Desktop\\date.txt";
+    static BufferedReader reader;
 
     public static void main(String[] args) {
-        Date date = new Date();
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+        SeveralThreads runner = new SeveralThreads();
+        Thread thread1 = new Thread(runner);
+        Thread thread2 = new Thread(runner);
 
         try {
+            reader = new BufferedReader(new FileReader(new File(path)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
-            File file = new File("C:\\Users\\psushenko\\Desktop\\date.txt");
-            FileReader fr = new FileReader(file);
-            BufferedReader reader = new BufferedReader(fr);
+
+        thread1.start();
+        thread2.start();
+    }
+
+
+    public void run () {
+        System.out.println(">>>");
+        threads();
+    }
+
+
+    public static void threads() {
+
+        try {
+//            File file = new File(path);
+//            FileReader fr = new FileReader(file);
+//            BufferedReader reader = new BufferedReader(fr);
+//            BufferedReader reader = new BufferedReader(new FileReader(new File(path)));
+
+            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
             Date parsingDate;
 
             String line;
             while ((line = reader.readLine()) != null) {
-//                System.out.println(line);
-//                line = line.replace("\n", "");
-//                line = line.replace("\r", "");
-
                 parsingDate = dateFormat.parse(line);
-                System.out.println(parsingDate);
+//                System.out.println(parsingDate);
+//                System.out.println(dateFormat.format(parsingDate));
+                System.out.println(dateFormat.format(parsingDate.getTime()) + " " + Thread.currentThread().getName());
             }
 
 
@@ -38,7 +61,7 @@ public class SeveralThreads {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-    }
 
+    }
 
 }
