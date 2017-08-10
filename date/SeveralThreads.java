@@ -65,8 +65,8 @@ public class SeveralThreads implements Runnable {
             e.printStackTrace();
         }
 
-        System.out.println((date2.getTime() - date1.getTime())/1000 + "\tms");
-        System.out.println(date2.getTime() - date1.getTime() + "\ts");
+        System.out.println((date2.getTime() - date1.getTime())/1000 + "\ts");
+        System.out.println(date2.getTime() - date1.getTime() + "\tms");
 
     }
 
@@ -85,14 +85,27 @@ public class SeveralThreads implements Runnable {
 
             String line;
 //            while ((line = reader.readLine()) != null) {
-            for (int i = 0; i < DateGenerator.count / n; i++){
+            int iMax = DateGenerator.count / n;
+
+            List<Date> list = new ArrayList<>(510);
+            for (int i = 0; i < iMax; i++){
+
                 line = reader.readLine();
                 if (line == null) break;
                 parsingDate = dateFormat.parse(line);
 //                System.out.println(dateFormat.format(parsingDate) + " " + Thread.currentThread().getName());
 //                Date date = new Date(parsingDate.getTime());
-                recordList(new Date(parsingDate.getTime()));
+
+                list.add(new Date(parsingDate.getTime()));
+                if (list.size() == 510) {
+                    recordList(list);
+                }
+
+//                recordList(new Date(parsingDate.getTime()));
+
             }
+
+            recordList(list);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -107,6 +120,10 @@ public class SeveralThreads implements Runnable {
         dateList.add(date);
     }
 
+    public synchronized void recordList(List<Date> dates) {
+        dateList.addAll(dates);
+        dates.clear();
+    }
 
 
 }
