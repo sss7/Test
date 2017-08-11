@@ -1,17 +1,15 @@
 package test;
 
-import sun.plugin2.main.server.HeartbeatThread;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class LogRefactor implements Runnable {
-    private static String path = "C:\\Users\\psushenko\\Desktop\\SystemOut_17.07.25_04.58.27.log";
-//    static String path = "C:\\Users\\psushenko\\Desktop\\Log.log";
     private static String logOut = "C:\\Users\\psushenko\\Desktop\\result.xml";
-    private static List<String> list = new ArrayList<>(1000);
+    private static String path = "C:\\Users\\psushenko\\Desktop\\SystemOut_17.07.25_04.58.27.log";
+//private static String path = "C:\\Users\\psushenko\\Desktop\\Log.log";
+    private static List<String> list = new ArrayList<>(10000);
     private static int n;
 
     public static void main(String[] args) {
@@ -51,6 +49,8 @@ public class LogRefactor implements Runnable {
             e.printStackTrace();
         }
 
+
+//        System.out.println(list.size());
     }
 
 
@@ -60,23 +60,26 @@ public class LogRefactor implements Runnable {
             List<String> listErr = new ArrayList<>(1500);
 
             int numberOfThread = Integer.parseInt(Thread.currentThread().getName().split("-")[1]);
-            for (int i = 0; i < numberOfThread; i++)
-                reader.readLine();
+            long fileSize = new File(path).length();
+            long blockSize = fileSize / n;
+
+            reader.skip(blockSize * numberOfThread);
 
             String line;
-            while ((line = reader.readLine()) != null) {
+            int currentSize = 0;
+            while (currentSize < blockSize && (line = reader.readLine()) != null) {
+
+                currentSize += (line.length()  + 1);
+
+                if (!line.startsWith("[")) continue;
                 if (line.contains("ERROR")) {
 //                    System.out.println(numberOfThread + "\t" + line);
                     listErr.add(parserForLog(line));
-//                    listErr.add(line);
 
                     if (listErr.size() == 1000) {
                         recordList(listErr);
                     }
                 }
-
-                for (int i = 0; i < n - 1; i++)
-                    reader.readLine();
 
             }
             recordList(listErr);
@@ -84,7 +87,6 @@ public class LogRefactor implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
     }
 
@@ -100,7 +102,6 @@ public class LogRefactor implements Runnable {
             sb.append("\r\n\t\t<body>\r\n\t\t\t");
             sb.append(s);
             sb.append("\r\n\t\t</body>\r\n\t</element>");
-
         } else {
             sb.append("\t<element>\r\n\t\t<timestamp>\r\n\t\t\t");
             sb.append(arr[1]);
